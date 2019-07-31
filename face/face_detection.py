@@ -9,8 +9,8 @@ if __name__ == "__main__":
 
     pipeline.start(config)
 
-    face_path = "/opt/ros/kinetic/share/OpenCV-3.3.1-dev/haarcascades/haarcascade_frontalface_default.xml"
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    face_path = "/opt/ros/kinetic/share/OpenCV-3.3.1-dev/haarcascades/haarcascade_frontalface_alt2.xml"
+    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt2.xml')
     face_cascade.load(face_path)
 
     try:
@@ -22,13 +22,17 @@ if __name__ == "__main__":
             
             color = np.asanyarray(color_frame.get_data())
             gray = cv2.cvtColor(color, cv2.COLOR_BGR2GRAY)
+            gray_h = cv2.equalizeHist(gray)
+
 
             face = face_cascade.detectMultiScale(gray, 1.3, 5)
 
+            window = np.hstack((gray, gray_h))
             for (x, y, w, h) in face:
                 cv2.rectangle(color, (x, y), (x+w, y+h), (0, 255, 0), 3)
             
-            cv2.imshow('', color)
+            cv2.imshow('', window)
+            cv2.imshow('a', color)
             cv2.waitKey(1)
     finally:
         pipeline.stop()

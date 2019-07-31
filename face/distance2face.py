@@ -40,6 +40,8 @@ if __name__ == "__main__":
             frames = pipeline.wait_for_frames()
             color_frame = frames.get_color_frame()
             depth_frame = frames.get_depth_frame()
+            if not color_frame or not depth_frame:
+                continue
 
             # get data 
             color = np.asanyarray(color_frame.get_data())
