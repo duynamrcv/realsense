@@ -39,14 +39,14 @@ if __name__ == "__main__":
             list_distance_face = []
             for (x, y, w, h) in face:
                 dist = depth_frame.get_distance(x+w//2, y+h//2)
-                distance_face = np.array([x, y, w, h, dist])
-                list_distance_face.append(distance_face)
+                distance_face = x, y, w, h, dist
+                # print distance_face
+                list_distance_face += [distance_face]
                 cv2.rectangle(color, (x, y), (x+w, y+h), (255, 0, 0), 3)
 
-            # list_distance_face = np.array(list_distance_face)
-            print list_distance_face
-            # nearest = nearestFace(list_distance_face)
-            # cv2.rectangle(color, (nearest[0], nearest[1]), (nearest[0]+nearest[2], nearest[1]+nearest[3]), (0, 255, 0), 3)
+            list_distance_face = np.array(list_distance_face)
+            nearest = nearestFace(list_distance_face)
+            cv2.rectangle(color, (nearest[0], nearest[1]), (nearest[0]+nearest[2], nearest[1]+nearest[3]), (0, 255, 0), 3)
 
             cv2.imshow('', color)
             cv2.waitKey(1)
