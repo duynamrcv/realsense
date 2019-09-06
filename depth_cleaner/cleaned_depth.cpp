@@ -19,17 +19,21 @@ void colorDepthMap(const Mat& depth_raw, const int& color_map, Mat& depth_show)
 
 void depthCleaner(Mat& clean_depth)
 {
+    Mat input_depth = Mat(clean_depth.size(), CV_8U);
+    clean_depth.convertTo(input_depth, CV_8U, 255.0/65535);
     const unsigned char no_depth = 0;
     Mat temp1, temp2;
     Mat small_depthf;
 
-    resize(clean_depth, small_depthf, clean_depth.size(), 1, 1);
+    resize(input_depth, small_depthf, input_depth.size(), 1, 1);
 
     // inpaint only the masked "unknown" pixel
+    // inpaint using CV_8U
     inpaint(small_depthf, (small_depthf == no_depth), temp1, 5.0, INPAINT_TELEA);
 
     resize(temp1, temp2, temp1.size());
-    temp2.copyTo(clean_depth, (clean_depth == no_depth));
+    temp2.copyTo(input_depth, (input_depth == no_depth));
+    input_depth.convertTo(clean_depth, CV_16U, 65535.0/255);
     return;
 }
 
